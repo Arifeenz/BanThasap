@@ -1,0 +1,18 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Sarabun', ui-sans-serif, system-ui, sans-serif;
+    
+    --color-primary: #2d5a27;
+    --color-primary-light: #3a6b33;
+    --color-primary-dark: #1a3d16;
+    --color-accent: #6db85c;
+    --color-bg: #f7f5f0;
+    --color-text-muted: #7a8c75;
+}

@@ -64,6 +64,12 @@
             noProducts: @json(__('site.map.no_products')),
         };
 
+        function escapeHtml(value) {
+            return String(value).replace(/[&<>"']/g, function (ch) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
+            });
+        }
+
         function createPinIcon(emoji, bgColor) {
             return L.divIcon({
                 html: '<div style="background:' + bgColor + ';width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.4);"><span style="transform:rotate(45deg);font-size:14px;">' + emoji + '</span></div>',
@@ -91,18 +97,18 @@
         const allMarkers = [];
 
         attractionMarkers.forEach((point) => {
-            const popup = '<a href="' + point.url + '"><strong>' + point.name + '</strong></a><br><span style="color:#7a8c75;">' + i18n.attractionLabel + '</span>';
+            const popup = '<a href="' + point.url + '"><strong>' + escapeHtml(point.name) + '</strong></a><br><span style="color:#7a8c75;">' + i18n.attractionLabel + '</span>';
             const marker = L.marker([point.lat, point.lng], { icon: attractionIcon }).addTo(map).bindPopup(popup);
             allMarkers.push(marker);
         });
 
         villageMarkers.forEach((point) => {
-            let popup = '<a href="' + point.url + '"><strong>' + point.name + '</strong></a>';
+            let popup = '<a href="' + point.url + '"><strong>' + escapeHtml(point.name) + '</strong></a>';
 
             if (point.products.length) {
                 popup += '<br><span style="color:#7a8c75;">' + i18n.productsInVillage + '</span><ul style="margin:4px 0 0;padding-left:16px;">';
                 point.products.forEach((product) => {
-                    popup += '<li><a href="' + product.url + '">' + product.name + '</a></li>';
+                    popup += '<li><a href="' + product.url + '">' + escapeHtml(product.name) + '</a></li>';
                 });
                 popup += '</ul>';
             } else {
@@ -112,7 +118,7 @@
             const marker = L.marker([point.lat, point.lng], { icon: villageIcon })
                 .addTo(map)
                 .bindPopup(popup)
-                .bindTooltip(point.name, {
+                .bindTooltip(escapeHtml(point.name), {
                     permanent: true,
                     direction: 'right',
                     offset: [8, -8],

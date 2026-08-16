@@ -56,18 +56,6 @@ class HeroSlidesTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->visibleFrom('md'),
-                TextColumn::make('created_at')
-                    ->label('สร้างเมื่อ')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->visibleFrom('md'),
-                TextColumn::make('updated_at')
-                    ->label('แก้ไขเมื่อ')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->visibleFrom('md'),
             ])
             ->defaultSort('order')
             ->filters([

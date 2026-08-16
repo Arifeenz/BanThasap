@@ -71,12 +71,6 @@ class AttractionsTable
                             ->visible(fn ($record) => (bool) $record?->is_featured),
                     ]),
                 ]),
-                TextColumn::make('village.name')
-                    ->label('หมู่บ้าน')
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->visibleFrom('md'),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([

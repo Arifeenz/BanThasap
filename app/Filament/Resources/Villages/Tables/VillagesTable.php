@@ -47,12 +47,6 @@ class VillagesTable
                             ->color(fn ($state) => $state ? 'success' : 'gray'),
                     ]),
                 ]),
-                TextColumn::make('number')
-                    ->label('หมู่ที่')
-                    ->numeric()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->visibleFrom('md'),
             ])
             ->defaultSort('number')
             ->filters([

@@ -44,18 +44,6 @@ class HeroSlidesTable
                             ->color(fn ($state) => $state ? 'success' : 'gray'),
                     ]),
                 ]),
-                TextColumn::make('order')
-                    ->label('ลำดับ')
-                    ->numeric()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->visibleFrom('md'),
-                TextColumn::make('duration')
-                    ->label('เวลาแสดง')
-                    ->formatStateUsing(fn ($state) => $state.' วินาที')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->visibleFrom('md'),
             ])
             ->defaultSort('order')
             ->filters([

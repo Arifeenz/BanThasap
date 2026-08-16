@@ -53,12 +53,6 @@ class PostsTable
                             ->color(fn ($state) => $state ? 'success' : 'gray'),
                     ]),
                 ]),
-                TextColumn::make('published_at')
-                    ->label('วันที่เผยแพร่')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->visibleFrom('md'),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([

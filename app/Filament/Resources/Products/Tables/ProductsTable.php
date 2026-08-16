@@ -68,12 +68,6 @@ class ProductsTable
                             ->visible(fn ($record) => (bool) $record?->is_featured),
                     ]),
                 ]),
-                TextColumn::make('price')
-                    ->label('ราคา')
-                    ->formatStateUsing(fn ($state) => $state !== null ? '฿'.number_format($state, 0) : '-')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->visibleFrom('md'),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([

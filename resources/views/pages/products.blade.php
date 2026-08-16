@@ -4,13 +4,13 @@
 
 @section('content')
 
-<div class="bg-[#3a6b33] px-6 py-10 text-center pt-24">
+<div class="bg-[#3a6b33] px-6 py-10 text-center pt-28">
     <h1 class="text-[#e8f5e3] text-2xl font-medium mb-2">{{ __('site.products.header_title') }}</h1>
     <p class="text-[#b8d8b0] text-sm">{{ __('site.products.header_subtitle') }}</p>
 </div>
 
 {{-- Filter Bar --}}
-<div class="px-6 py-4 bg-white border-b border-[#d4e6cc] sticky top-14 z-40">
+<div class="px-6 py-4 bg-white border-b border-[#d4e6cc] sticky z-40" style="top: var(--navbar-offset, 6.5rem); transition: top .3s ease;">
     <div class="flex flex-wrap gap-2">
         <a href="{{ request()->fullUrlWithQuery(['category' => null]) }}"
            class="px-4 py-1.5 rounded-full text-sm transition-colors {{ !request('category') ? 'bg-[#2d5a27] text-white' : 'bg-[#f0f7ed] text-[#3a6b33] hover:bg-[#d4e6cc]' }}">
@@ -42,7 +42,7 @@
         <a href="/products/{{ $product->slug }}" class="bg-white border border-[#d4e6cc] rounded-2xl overflow-hidden block hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
             <div class="h-48 bg-[#f0f8ee] flex items-center justify-center overflow-hidden">
                 @if($product->image)
-                    <img src="{{ Storage::url($product->image) }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" alt="{{ $product->name }}">
+                    <img src="{{ Storage::url($product->image) }}" loading="lazy" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" alt="{{ $product->name }}">
                 @else
                     <span class="text-5xl">🛍️</span>
                 @endif

@@ -8,8 +8,25 @@
     <a href="/attractions" class="text-[#3a6b33] text-sm mb-6 inline-block">{{ __('site.common.back') }}</a>
 
     <div class="bg-white border border-[#d4e6cc] rounded-xl overflow-hidden">
-        @if($attraction->image)
-            <img src="{{ Storage::url($attraction->image) }}" class="w-full object-contain max-h-[600px]" alt="{{ $attraction->name }}">
+        @if($attraction->images->isNotEmpty())
+            @php
+                $coverImage = $attraction->images->firstWhere('is_cover', true) ?? $attraction->images->first();
+            @endphp
+            <img id="attraction-main-image" src="{{ Storage::url($coverImage->image) }}" class="w-full object-contain max-h-[600px]" alt="{{ $attraction->name }}">
+
+            @if($attraction->images->count() > 1)
+                <div class="flex gap-2 p-3 overflow-x-auto bg-white border-b border-[#d4e6cc]">
+                    @foreach($attraction->images as $image)
+                        <button
+                            type="button"
+                            onclick="document.getElementById('attraction-main-image').src = '{{ Storage::url($image->image) }}'"
+                            class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 {{ $image->is($coverImage) ? 'border-[#3a6b33]' : 'border-transparent' }} hover:border-[#3a6b33] transition-colors"
+                        >
+                            <img src="{{ Storage::url($image->image) }}" loading="lazy" class="w-full h-full object-cover" alt="{{ $attraction->name }}">
+                        </button>
+                    @endforeach
+                </div>
+            @endif
         @endif
         <div class="p-6">
             <div class="flex items-start justify-between mb-4">
@@ -41,9 +58,17 @@
                     </div>
                 @endif
                 @if($attraction->contact)
+                    @php
+                        $isPhone = preg_match('/^[0-9\s\-+()]{9,}$/', trim($attraction->contact));
+                        $phoneDigits = preg_replace('/[^0-9+]/', '', $attraction->contact);
+                    @endphp
                     <div class="bg-[#f0f8ee] rounded-xl p-4">
                         <h2 class="text-[#2d5a27] text-sm font-medium mb-1">{{ __('site.common.contact') }}</h2>
-                        <p class="text-[#4a6a45] text-sm">{{ $attraction->contact }}</p>
+                        @if($isPhone)
+                            <a href="tel:{{ $phoneDigits }}" class="text-[#3a6b33] text-sm font-medium underline underline-offset-2">{{ $attraction->contact }}</a>
+                        @else
+                            <p class="text-[#4a6a45] text-sm">{{ $attraction->contact }}</p>
+                        @endif
                     </div>
                 @endif
             </div>
@@ -60,7 +85,7 @@
                     <div class="flex items-center justify-between p-4 pb-0">
                         <h2 class="text-[#2d5a27] text-sm font-medium">{{ __('site.attractions.map_position') }}</h2>
                         <a
-                            href="https://www.google.com/maps?q={{ $attraction->latitude }},{{ $attraction->longitude }}"
+                            href="https://www.google.com/maps/dir/?api=1&destination={{ $attraction->latitude }},{{ $attraction->longitude }}"
                             target="_blank"
                             rel="noopener"
                             class="bg-[#3a6b33] text-white text-xs px-3 py-1.5 rounded-lg hover:bg-[#2d5a27] transition-colors"

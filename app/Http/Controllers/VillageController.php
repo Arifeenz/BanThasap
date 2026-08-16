@@ -15,7 +15,7 @@ class VillageController extends Controller
 
     public function show($slug)
     {
-        $village = Village::where('slug', $slug)->where('is_active', true)->with('attractions')->firstOrFail();
+        $village = Village::where('slug', $slug)->where('is_active', true)->with(['attractions', 'images'])->firstOrFail();
         return view('pages.village-detail', compact('village'));
     }
 }

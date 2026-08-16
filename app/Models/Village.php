@@ -47,4 +47,17 @@ class Village extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    public function images()
+    {
+        return $this->hasMany(VillageImage::class)->orderBy('sort_order');
+    }
+
+    public function syncCoverImage(): void
+    {
+        $cover = $this->images()->where('is_cover', true)->first()
+            ?? $this->images()->first();
+
+        $this->updateQuietly(['image' => $cover?->image]);
+    }
 }

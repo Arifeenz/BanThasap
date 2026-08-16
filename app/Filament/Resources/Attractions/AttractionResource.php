@@ -41,9 +41,9 @@ class AttractionResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $query = parent::getEloquentQuery();
+        $query = parent::getEloquentQuery()->with('village');
 
-        if (auth()->user()->hasRole('super_admin')) {
+        if (auth()->user()->isSuperAdmin()) {
             return $query;
         }
 

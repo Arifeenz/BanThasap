@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Products\Schemas;
 
+use App\Models\Product;
 use App\Models\Village;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
@@ -33,12 +34,7 @@ class ProductForm
                         Select::make('category')
                             ->label('หมวดหมู่')
                             ->default(null)
-                            ->options([
-                                'food' => 'อาหาร',
-                                'handicraft' => 'หัตถกรรม',
-                                'health' => 'สุขภาพ',
-                                'other' => 'อื่นๆ',
-                            ])
+                            ->options(Product::categoryOptions())
                             ->columnSpan(1),
                         Select::make('village_id')
                             ->label('หมู่บ้าน')
@@ -54,25 +50,6 @@ class ProductForm
                             ->label('เรื่องราวสินค้า')
                             ->default(null)
                             ->columnSpanFull(),
-                    ])
-                    ->columns(3),
-
-                Section::make('ราคาและการติดต่อ')
-                    ->icon('heroicon-o-currency-dollar')
-                    ->schema([
-                        TextInput::make('price')
-                            ->label('ราคา')
-                            ->numeric()
-                            ->default(null)
-                            ->prefix('฿'),
-                        TextInput::make('unit')
-                            ->label('หน่วย')
-                            ->default(null)
-                            ->placeholder('เช่น ชิ้น, กล่อง, โหล'),
-                        TextInput::make('contact')
-                            ->label('ติดต่อ')
-                            ->default(null)
-                            ->placeholder('เบอร์โทรหรือช่องทางติดต่อ'),
                     ])
                     ->columns(3),
 
@@ -128,12 +105,30 @@ class ProductForm
                             ->columns(2)
                             ->orderColumn('sort_order')
                             ->reorderable()
-                            ->reorderableWithButtons()
                             ->collapsible()
                             ->addActionLabel('เพิ่มรูปภาพ')
                             ->helperText('ลากเพื่อจัดลำดับ และกดปุ่มรูปดาวเพื่อตั้งเป็นรูปหน้าปก (มีได้แค่รูปเดียว รูปที่ตั้งจะถูกย้ายขึ้นบนสุดให้อัตโนมัติ) | แนะนำรูปสี่เหลี่ยมจตุรัส (1:1) ขนาดประมาณ 1000x1000 พิกเซล ใช้ปุ่มแก้ไขรูปเพื่อครอปก่อนบันทึกได้เลย')
                             ->columnSpanFull(),
                     ]),
+
+                Section::make('ราคาและการติดต่อ')
+                    ->icon('heroicon-o-currency-dollar')
+                    ->schema([
+                        TextInput::make('price')
+                            ->label('ราคา')
+                            ->numeric()
+                            ->default(null)
+                            ->prefix('฿'),
+                        TextInput::make('unit')
+                            ->label('หน่วย')
+                            ->default(null)
+                            ->placeholder('เช่น ชิ้น, กล่อง, โหล'),
+                        TextInput::make('contact')
+                            ->label('ติดต่อ')
+                            ->default(null)
+                            ->placeholder('เบอร์โทรหรือช่องทางติดต่อ'),
+                    ])
+                    ->columns(3),
 
                 Section::make('การแสดงผลหน้าเว็บ')
                     ->icon('heroicon-o-eye')
@@ -143,7 +138,8 @@ class ProductForm
                             ->required(),
                         Toggle::make('is_featured')
                             ->label('ปักหมุดหน้าแรก')
-                            ->helperText('ถ้าไม่ปักหมุด ระบบจะสุ่มสินค้าขึ้นหน้าแรกให้เองทุกครั้งที่มีคนเข้าเว็บ เพื่อความเป็นธรรมระหว่างสมาชิกในชุมชน'),
+                            ->disabled(fn () => ! auth()->user()->isSuperAdmin())
+                            ->helperText('ถ้าไม่ปักหมุด ระบบจะสุ่มสินค้าขึ้นหน้าแรกให้เองทุกครั้งที่มีคนเข้าเว็บ เพื่อความเป็นธรรมระหว่างสมาชิกในชุมชน (เฉพาะผู้ดูแลสูงสุดเท่านั้นที่ปักหมุดได้)'),
                     ])
                     ->columns(2),
             ]);

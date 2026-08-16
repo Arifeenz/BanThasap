@@ -8,8 +8,25 @@
     <a href="/posts" class="text-[#3a6b33] text-sm mb-6 inline-block">{{ __('site.common.back') }}</a>
 
     <div class="bg-white border border-[#d4e6cc] rounded-xl overflow-hidden">
-        @if($post->image)
-            <img src="{{ Storage::url($post->image) }}" class="w-full object-contain max-h-[600px]" alt="{{ $post->title }}">
+        @if($post->images->isNotEmpty())
+            @php
+                $coverImage = $post->images->firstWhere('is_cover', true) ?? $post->images->first();
+            @endphp
+            <img id="post-main-image" src="{{ Storage::url($coverImage->image) }}" class="w-full object-contain max-h-[600px]" alt="{{ $post->title }}">
+
+            @if($post->images->count() > 1)
+                <div class="flex gap-2 p-3 overflow-x-auto bg-white border-b border-[#d4e6cc]">
+                    @foreach($post->images as $image)
+                        <button
+                            type="button"
+                            onclick="document.getElementById('post-main-image').src = '{{ Storage::url($image->image) }}'"
+                            class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 {{ $image->is($coverImage) ? 'border-[#3a6b33]' : 'border-transparent' }} hover:border-[#3a6b33] transition-colors"
+                        >
+                            <img src="{{ Storage::url($image->image) }}" loading="lazy" class="w-full h-full object-cover" alt="{{ $post->title }}">
+                        </button>
+                    @endforeach
+                </div>
+            @endif
         @endif
         <div class="p-6">
             <div class="flex items-start justify-between mb-2">

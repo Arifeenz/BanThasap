@@ -10,6 +10,15 @@ class Post extends Model
 {
     use HasSlug;
 
+    public static function categoryOptions(): array
+    {
+        return [
+            'news' => 'ข่าวสาร',
+            'event' => 'กิจกรรม',
+            'announcement' => 'ประกาศ',
+        ];
+    }
+
     protected $fillable = [
         'title',
         'slug',
@@ -39,5 +48,18 @@ class Post extends Model
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(PostImage::class)->orderBy('sort_order');
+    }
+
+    public function syncCoverImage(): void
+    {
+        $cover = $this->images()->where('is_cover', true)->first()
+            ?? $this->images()->first();
+
+        $this->updateQuietly(['image' => $cover?->image]);
     }
 }

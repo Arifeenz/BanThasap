@@ -22,7 +22,7 @@
                             onclick="document.getElementById('product-main-image').src = '{{ Storage::url($image->image) }}'"
                             class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 {{ $image->is($coverImage) ? 'border-[#3a6b33]' : 'border-transparent' }} hover:border-[#3a6b33] transition-colors"
                         >
-                            <img src="{{ Storage::url($image->image) }}" class="w-full h-full object-cover" alt="{{ $product->name }}">
+                            <img src="{{ Storage::url($image->image) }}" loading="lazy" class="w-full h-full object-cover" alt="{{ $product->name }}">
                         </button>
                     @endforeach
                 </div>
@@ -62,9 +62,17 @@
             @endif
 
             @if($product->contact)
+                @php
+                    $isPhone = preg_match('/^[0-9\s\-+()]{9,}$/', trim($product->contact));
+                    $phoneDigits = preg_replace('/[^0-9+]/', '', $product->contact);
+                @endphp
                 <div class="border border-[#d4e6cc] rounded-xl p-4">
                     <h2 class="text-[#2d5a27] text-sm font-medium mb-2">{{ __('site.products.contact_order_title') }}</h2>
-                    <p class="text-[#4a6a45] text-sm">{{ $product->contact }}</p>
+                    @if($isPhone)
+                        <a href="tel:{{ $phoneDigits }}" class="text-[#3a6b33] text-sm font-medium underline underline-offset-2">{{ $product->contact }}</a>
+                    @else
+                        <p class="text-[#4a6a45] text-sm">{{ $product->contact }}</p>
+                    @endif
                 </div>
             @endif
         </div>

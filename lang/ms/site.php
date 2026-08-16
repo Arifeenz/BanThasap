@@ -117,6 +117,7 @@ return [
         'empty_state' => 'Belum ada tempat atau kampung yang ditanda lokasinya',
         'products_in_village' => 'Produk komuniti di kampung ini:',
         'no_products' => 'Belum ada produk yang diterbitkan',
+        'navigate' => 'Navigasi',
     ],
 
 ];

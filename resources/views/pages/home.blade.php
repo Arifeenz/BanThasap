@@ -10,7 +10,7 @@
     {{-- Slides --}}
     @foreach($heroSlides as $index => $slide)
     <div class="hero-slide absolute inset-0 transition-opacity duration-1000 {{ $index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0' }}">
-        <img src="{{ Storage::url($slide->image) }}" class="w-full h-full object-cover" alt="{{ $slide->title }}">
+        <img src="{{ Storage::url($slide->image) }}" @if($index > 0) loading="lazy" @endif class="w-full h-full object-cover" alt="{{ $slide->title }}">
         <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60"></div>
         
         @if($slide->title || $slide->subtitle)
@@ -158,7 +158,7 @@
         <div class="relative overflow-hidden">
             <a href="/attractions/{{ $attractions->first()->slug }}">
                 @if($attractions->first()->image)
-                    <img src="{{ Storage::url($attractions->first()->image) }}" class="w-full h-full object-cover min-h-[300px] md:min-h-full" alt="{{ $attractions->first()->name }}">
+                    <img src="{{ Storage::url($attractions->first()->image) }}" loading="lazy" class="w-full h-full object-cover min-h-[300px] md:min-h-full" alt="{{ $attractions->first()->name }}">
                 @else
                     <div class="w-full h-full min-h-[300px] bg-[#d4e6cc] flex items-center justify-center text-6xl">🏞️</div>
                 @endif
@@ -188,7 +188,7 @@
             @foreach($attractions->skip(1)->take(2) as $attraction)
             <a href="/attractions/{{ $attraction->slug }}" class="relative overflow-hidden group">
                 @if($attraction->image)
-                    <img src="{{ Storage::url($attraction->image) }}" class="w-full h-full object-cover min-h-[200px] group-hover:scale-105 transition-transform duration-300" alt="{{ $attraction->name }}">
+                    <img src="{{ Storage::url($attraction->image) }}" loading="lazy" class="w-full h-full object-cover min-h-[200px] group-hover:scale-105 transition-transform duration-300" alt="{{ $attraction->name }}">
                 @else
                     <div class="w-full h-full min-h-[200px] bg-[#e8f5e3] flex items-center justify-center text-5xl">🏞️</div>
                 @endif
@@ -225,7 +225,7 @@
         <a href="/products/{{ $product->slug }}" class="bg-white border border-[#d4e6cc] rounded-2xl overflow-hidden block hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
             <div class="h-52 bg-[#f0f8ee] flex items-center justify-center overflow-hidden">
                 @if($product->image)
-                    <img src="{{ Storage::url($product->image) }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" alt="{{ $product->name }}">
+                    <img src="{{ Storage::url($product->image) }}" loading="lazy" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" alt="{{ $product->name }}">
                 @else
                     <span class="text-6xl">🛍️</span>
                 @endif
@@ -294,7 +294,7 @@
             {{-- รูป --}}
             @if($post->image)
             <div class="flex-shrink-0 w-32 md:w-48 h-24 md:h-32 rounded-xl overflow-hidden">
-                <img src="{{ Storage::url($post->image) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="{{ $post->title }}">
+                <img src="{{ Storage::url($post->image) }}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="{{ $post->title }}">
             </div>
             @endif
         </a>
@@ -311,7 +311,7 @@
         <a href="/villages/{{ $village->slug }}" class="bg-white border border-[#d4e6cc] rounded-xl overflow-hidden hover:border-[#6db85c] hover:shadow-md transition-all group">
             <div class="h-40 bg-[#f0f8ee] flex items-center justify-center overflow-hidden">
                 @if($village->image)
-                    <img src="{{ Storage::url($village->image) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="{{ $village->name }}">
+                    <img src="{{ Storage::url($village->image) }}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="{{ $village->name }}">
                 @else
                     <span class="text-5xl">🏘️</span>
                 @endif

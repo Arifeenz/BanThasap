@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>:root { --navbar-offset: 6.5rem; }</style>
 </head>
 <body class="bg-[#f7f5f0] overflow-x-hidden" style="font-family: 'Sarabun', sans-serif;">
 
@@ -46,7 +47,7 @@
     </nav>
 
     {{-- Mobile Menu --}}
-    <div id="mobile-menu" class="hidden fixed top-14 left-0 right-0 z-50 bg-[#1a3d16] md:hidden">
+    <div id="mobile-menu" class="hidden fixed top-[6.5rem] left-0 right-0 z-50 bg-[#1a3d16] md:hidden">
         <div class="flex flex-col px-4 py-3 gap-3">
             <a href="/" class="text-[#c8e6c0] text-sm py-2 border-b border-[#2d5a27]">{{ __('site.nav.home') }}</a>
             <a href="/products" class="text-[#c8e6c0] text-sm py-2 border-b border-[#2d5a27]">{{ __('site.nav.products') }}</a>
@@ -134,7 +135,17 @@
             navbar.classList.add('bg-[#2d5a27]', 'shadow-md');
         }
 
-        window.addEventListener('scroll', () => {
+        // อัปเดตความสูงจริงของ navbar ไว้เป็น CSS variable เพื่อให้
+        // แถบที่ sticky ต่อจาก navbar (เช่น แถบตัวกรอง) อ้างอิงตำแหน่งได้ถูกต้อง
+        // ไม่ว่า navbar จะซ่อนหรือแสดงอยู่ตอนนั้น
+        function updateNavbarOffset() {
+            const hidden = navbar.classList.contains('-translate-y-full');
+            document.documentElement.style.setProperty('--navbar-offset', hidden ? '0px' : navbar.offsetHeight + 'px');
+        }
+
+        let scrollTicking = false;
+
+        function handleScroll() {
             const currentScroll = window.scrollY;
 
             if (document.getElementById('hero-slider')) {
@@ -160,8 +171,19 @@
                 }
             }
 
+            updateNavbarOffset();
             lastScroll = currentScroll;
+            scrollTicking = false;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (!scrollTicking) {
+                window.requestAnimationFrame(handleScroll);
+                scrollTicking = true;
+            }
         });
+
+        updateNavbarOffset();
 
         document.getElementById('menu-btn').addEventListener('click', function() {
             document.getElementById('mobile-menu').classList.toggle('hidden');

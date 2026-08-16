@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="bg-[#3a6b33] px-6 py-10 text-center pt-24">
+<div class="bg-[#3a6b33] px-6 py-10 text-center pt-28">
     <h1 class="text-[#e8f5e3] text-2xl font-medium mb-2">{{ __('site.attractions.header_title') }}</h1>
     <p class="text-[#b8d8b0] text-sm">{{ __('site.attractions.header_subtitle') }}</p>
 </div>
@@ -15,7 +15,7 @@
         <a href="/attractions/{{ $attraction->slug }}" class="bg-white border border-[#d4e6cc] rounded-xl overflow-hidden block hover:border-[#6db85c] transition-colors">
             <div class="h-40 bg-[#f0f8ee] flex items-center justify-center">
                 @if($attraction->image)
-                    <img src="{{ Storage::url($attraction->image) }}" class="w-full h-full object-cover" alt="{{ $attraction->name }}">
+                    <img src="{{ Storage::url($attraction->image) }}" loading="lazy" class="w-full h-full object-cover" alt="{{ $attraction->name }}">
                 @else
                     <span class="text-5xl">🏞️</span>
                 @endif

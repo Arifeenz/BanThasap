@@ -50,7 +50,7 @@ class PostController extends Controller
 
     public function show($slug)
     {
-        $post = Post::where('slug', $slug)->where('is_published', true)->firstOrFail();
+        $post = Post::where('slug', $slug)->where('is_published', true)->with('images')->firstOrFail();
         return view('pages.post-detail', compact('post'));
     }
 }

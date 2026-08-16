@@ -10,6 +10,16 @@ class Attraction extends Model
 {
     use HasSlug;
 
+    public static function typeOptions(): array
+    {
+        return [
+            'nature' => 'ธรรมชาติ',
+            'history' => 'ประวัติศาสตร์',
+            'learning' => 'แหล่งเรียนรู้',
+            'community' => 'ชุมชน',
+        ];
+    }
+
     protected $fillable = [
         'name',
         'slug',
@@ -52,5 +62,18 @@ class Attraction extends Model
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(AttractionImage::class)->orderBy('sort_order');
+    }
+
+    public function syncCoverImage(): void
+    {
+        $cover = $this->images()->where('is_cover', true)->first()
+            ?? $this->images()->first();
+
+        $this->updateQuietly(['image' => $cover?->image]);
     }
 }

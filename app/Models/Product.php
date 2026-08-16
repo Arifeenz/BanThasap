@@ -10,6 +10,16 @@ class Product extends Model
 {
     use HasSlug;
 
+    public static function categoryOptions(): array
+    {
+        return [
+            'food' => 'อาหาร',
+            'handicraft' => 'หัตถกรรม',
+            'health' => 'สุขภาพ',
+            'other' => 'อื่นๆ',
+        ];
+    }
+
     protected $fillable = [
         'name',
         'slug',

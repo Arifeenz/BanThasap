@@ -6,8 +6,10 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\IconColumn;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -16,39 +18,58 @@ class HeroSlidesTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->defaultSort('order')
             ->columns([
-                ImageColumn::make('image')
-                    ->label('รูปภาพ')
-                    ->disk('public'),
-                TextColumn::make('title')
-                    ->label('หัวข้อ')
-                    ->searchable(),
-                TextColumn::make('subtitle')
-                    ->label('คำบรรยาย')
-                    ->searchable(),
+                Split::make([
+                    ImageColumn::make('image')
+                        ->label('รูปภาพ')
+                        ->disk('public')
+                        ->size(48)
+                        ->grow(false),
+                    Stack::make([
+                        TextColumn::make('title')
+                            ->label('หัวข้อ')
+                            ->weight(FontWeight::SemiBold)
+                            ->searchable(['title', 'subtitle'])
+                            ->description(function ($record) {
+                                return collect([
+                                    $record->subtitle,
+                                    'ลำดับ '.$record->order,
+                                    $record->duration.' วินาที',
+                                ])->filter()->join(' · ');
+                            }),
+                        TextColumn::make('is_active')
+                            ->label('เปิดใช้งาน')
+                            ->badge()
+                            ->formatStateUsing(fn ($state) => $state ? 'แสดงบนเว็บ' : 'ซ่อนจากเว็บ')
+                            ->color(fn ($state) => $state ? 'success' : 'gray'),
+                    ]),
+                ]),
                 TextColumn::make('order')
                     ->label('ลำดับ')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('md'),
                 TextColumn::make('duration')
                     ->label('เวลาแสดง')
-                    ->formatStateUsing(fn ($state) => $state . ' วินาที')
-                    ->sortable(),
-                IconColumn::make('is_active')
-                    ->label('เปิดใช้งาน')
-                    ->boolean(),
+                    ->formatStateUsing(fn ($state) => $state.' วินาที')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('md'),
                 TextColumn::make('created_at')
                     ->label('สร้างเมื่อ')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('md'),
                 TextColumn::make('updated_at')
                     ->label('แก้ไขเมื่อ')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('md'),
             ])
+            ->defaultSort('order')
             ->filters([
                 //
             ])

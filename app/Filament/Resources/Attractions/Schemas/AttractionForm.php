@@ -2,13 +2,19 @@
 
 namespace App\Filament\Resources\Attractions\Schemas;
 
+use App\Models\Attraction;
 use App\Models\Village;
+use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 
 class AttractionForm
@@ -28,18 +34,73 @@ class AttractionForm
                         Select::make('type')
                             ->label('ประเภท')
                             ->default(null)
-                            ->options([
-                                'nature' => 'ธรรมชาติ',
-                                'history' => 'ประวัติศาสตร์',
-                                'learning' => 'แหล่งเรียนรู้',
-                                'community' => 'ชุมชน',
-                            ]),
+                            ->options(Attraction::typeOptions()),
                         Select::make('village_id')
                             ->label('หมู่บ้าน')
                             ->options(Village::all()->pluck('name', 'id'))
                             ->default(null),
                     ])
                     ->columns(3),
+
+                Section::make('รูปภาพ')
+                    ->description('อัปโหลดได้หลายรูปตามที่ต้องการ')
+                    ->icon('heroicon-o-photo')
+                    ->schema([
+                        Repeater::make('images')
+                            ->relationship()
+                            ->hiddenLabel()
+                            ->schema([
+                                FileUpload::make('image')
+                                    ->label('รูปภาพ')
+                                    ->image()
+                                    ->disk('public')
+                                    ->required()
+                                    ->imageEditor()
+                                    ->imageEditorAspectRatios([
+                                        '4:3',
+                                        '16:9',
+                                        '1:1',
+                                        null,
+                                    ])
+                                    ->placeholder('ลากและวางไฟล์ หรือคลิกเพื่อเลือก')
+                                    ->columnSpanFull(),
+                                Hidden::make('is_cover')
+                                    ->default(false),
+                            ])
+                            ->extraItemActions([
+                                Action::make('setCover')
+                                    ->label('ตั้งเป็นรูปหน้าปก')
+                                    ->icon('heroicon-m-star')
+                                    ->visible(function (array $arguments, Get $get): bool {
+                                        $items = $get('images') ?? [];
+
+                                        return ! ($items[$arguments['item']]['is_cover'] ?? false);
+                                    })
+                                    ->action(function (array $arguments, Set $set, Get $get) {
+                                        $items = $get('images') ?? [];
+                                        $key = $arguments['item'];
+
+                                        foreach ($items as $itemKey => $item) {
+                                            $items[$itemKey]['is_cover'] = ($itemKey === $key);
+                                        }
+
+                                        // ย้ายรูปที่ตั้งเป็นปกขึ้นไปอยู่ลำดับแรกเสมอ
+                                        $cover = $items[$key];
+                                        unset($items[$key]);
+                                        $items = [$key => $cover] + $items;
+
+                                        $set('images', $items);
+                                    }),
+                            ])
+                            ->itemLabel(fn (array $state): ?string => ($state['is_cover'] ?? false) ? '⭐ รูปหน้าปก' : null)
+                            ->columns(2)
+                            ->orderColumn('sort_order')
+                            ->reorderable()
+                            ->collapsible()
+                            ->addActionLabel('เพิ่มรูปภาพ')
+                            ->helperText('ลากเพื่อจัดลำดับ และกดปุ่มรูปดาวเพื่อตั้งเป็นรูปหน้าปก (มีได้แค่รูปเดียว รูปที่ตั้งจะถูกย้ายขึ้นบนสุดให้อัตโนมัติ) | แนะนำรูปแนวนอน ขนาดประมาณ 1200x900 พิกเซล (สัดส่วน 4:3) ใช้ปุ่มแก้ไขรูปเพื่อครอปก่อนบันทึกได้เลย')
+                            ->columnSpanFull(),
+                    ]),
 
                 Section::make('เวลาและติดต่อ')
                     ->icon('heroicon-o-clock')
@@ -68,28 +129,11 @@ class AttractionForm
                             ->columnSpanFull(),
                     ]),
 
-                Section::make('รูปภาพ')
-                    ->icon('heroicon-o-photo')
-                    ->schema([
-                        FileUpload::make('image')
-                            ->label('รูปภาพ')
-                            ->image()
-                            ->disk('public')
-                            ->imageEditor()
-                            ->imageEditorAspectRatios([
-                                '4:3',
-                                '16:9',
-                                '1:1',
-                                null,
-                            ])
-                            ->helperText('แนะนำรูปแนวนอน ขนาดประมาณ 1200x900 พิกเซล (สัดส่วน 4:3) ใช้ปุ่มแก้ไขรูปเพื่อครอปก่อนบันทึกได้เลย')
-                            ->placeholder('ลากและวางไฟล์ หรือคลิกเพื่อเลือก')
-                            ->columnSpanFull(),
-                    ]),
-
                 Section::make('ตำแหน่งบนแผนที่')
                     ->description('ใช้แสดงหมุดในหน้าเว็บและปุ่มนำทางด้วย Google Maps')
                     ->icon('heroicon-o-globe-alt')
+                    ->collapsible()
+                    ->collapsed()
                     ->schema([
                         TextInput::make('latitude')
                             ->label('ละติจูด (Latitude)')
@@ -114,7 +158,8 @@ class AttractionForm
                             ->required(),
                         Toggle::make('is_featured')
                             ->label('ปักหมุดหน้าแรก')
-                            ->helperText('ถ้าไม่ปักหมุด ระบบจะสุ่มสถานที่ขึ้นหน้าแรกให้เองทุกครั้งที่มีคนเข้าเว็บ เพื่อความเป็นธรรมระหว่างสมาชิกในชุมชน'),
+                            ->disabled(fn () => ! auth()->user()->isSuperAdmin())
+                            ->helperText('ถ้าไม่ปักหมุด ระบบจะสุ่มสถานที่ขึ้นหน้าแรกให้เองทุกครั้งที่มีคนเข้าเว็บ เพื่อความเป็นธรรมระหว่างสมาชิกในชุมชน (เฉพาะผู้ดูแลสูงสุดเท่านั้นที่ปักหมุดได้)'),
                     ])
                     ->columns(2),
             ]);

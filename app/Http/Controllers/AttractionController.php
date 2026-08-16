@@ -15,7 +15,7 @@ class AttractionController extends Controller
 
     public function show($slug)
     {
-        $attraction = Attraction::where('slug', $slug)->where('is_active', true)->with('village')->firstOrFail();
+        $attraction = Attraction::where('slug', $slug)->where('is_active', true)->with(['village', 'images'])->firstOrFail();
         return view('pages.attraction-detail', compact('attraction'));
     }
 }

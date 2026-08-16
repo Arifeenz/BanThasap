@@ -4,13 +4,13 @@
 
 @section('content')
 
-<div class="bg-[#3a6b33] px-6 py-10 text-center pt-24">
+<div class="bg-[#3a6b33] px-6 py-10 text-center pt-28">
     <h1 class="text-[#e8f5e3] text-2xl font-medium mb-2">{{ __('site.posts.header_title') }}</h1>
     <p class="text-[#b8d8b0] text-sm">{{ __('site.posts.header_subtitle') }}</p>
 </div>
 
 {{-- Filter Bar --}}
-<div class="px-6 py-4 bg-white border-b border-[#d4e6cc] sticky top-14 z-40">
+<div class="px-6 py-4 bg-white border-b border-[#d4e6cc] sticky z-40" style="top: var(--navbar-offset, 6.5rem); transition: top .3s ease;">
     {{-- แถว 1: หมวดหมู่ --}}
     <div class="flex flex-wrap gap-2 mb-3">
         <a href="{{ request()->fullUrlWithQuery(['category' => null]) }}"
@@ -57,7 +57,7 @@
         @foreach($posts as $post)
         <a href="/posts/{{ $post->slug }}" class="bg-white border border-[#d4e6cc] rounded-xl p-4 flex gap-4 hover:border-[#6db85c] hover:shadow-md transition-all group">
             @if($post->image)
-                <img src="{{ Storage::url($post->image) }}" class="w-24 h-24 object-cover rounded-lg flex-shrink-0 group-hover:scale-105 transition-transform duration-300" alt="{{ $post->title }}">
+                <img src="{{ Storage::url($post->image) }}" loading="lazy" class="w-24 h-24 object-cover rounded-lg flex-shrink-0 group-hover:scale-105 transition-transform duration-300" alt="{{ $post->title }}">
             @else
                 <div class="w-24 h-24 bg-[#f0f8ee] rounded-lg flex-shrink-0 flex items-center justify-center text-3xl">📰</div>
             @endif

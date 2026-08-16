@@ -62,12 +62,18 @@
             attractionLabel: @json(__('site.map.legend_attraction')),
             productsInVillage: @json(__('site.map.products_in_village')),
             noProducts: @json(__('site.map.no_products')),
+            navigate: @json(__('site.map.navigate')),
         };
 
         function escapeHtml(value) {
             return String(value).replace(/[&<>"']/g, function (ch) {
                 return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
             });
+        }
+
+        function navigateLinkHtml(lat, lng) {
+            const url = 'https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng;
+            return '<a href="' + url + '" target="_blank" rel="noopener" style="display:inline-block;margin-top:6px;background:#3a6b33;color:#fff;font-size:11px;padding:4px 10px;border-radius:8px;text-decoration:none;">🧭 ' + escapeHtml(i18n.navigate) + '</a>';
         }
 
         function createPinIcon(emoji, bgColor) {
@@ -97,7 +103,7 @@
         const allMarkers = [];
 
         attractionMarkers.forEach((point) => {
-            const popup = '<a href="' + point.url + '"><strong>' + escapeHtml(point.name) + '</strong></a><br><span style="color:#7a8c75;">' + i18n.attractionLabel + '</span>';
+            const popup = '<a href="' + point.url + '"><strong>' + escapeHtml(point.name) + '</strong></a><br><span style="color:#7a8c75;">' + i18n.attractionLabel + '</span><br>' + navigateLinkHtml(point.lat, point.lng);
             const marker = L.marker([point.lat, point.lng], { icon: attractionIcon }).addTo(map).bindPopup(popup);
             allMarkers.push(marker);
         });
@@ -114,6 +120,8 @@
             } else {
                 popup += '<br><span style="color:#7a8c75;">' + i18n.noProducts + '</span>';
             }
+
+            popup += '<br>' + navigateLinkHtml(point.lat, point.lng);
 
             const marker = L.marker([point.lat, point.lng], { icon: villageIcon })
                 .addTo(map)

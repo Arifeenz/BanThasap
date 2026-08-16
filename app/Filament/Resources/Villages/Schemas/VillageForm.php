@@ -59,6 +59,9 @@ class VillageForm
                                         '1:1',
                                         null,
                                     ])
+                                    ->automaticallyResizeImagesToWidth('1600')
+                                    ->automaticallyResizeImagesMode('contain')
+                                    ->automaticallyUpscaleImagesWhenResizing(false)
                                     ->placeholder('ลากและวางไฟล์ หรือคลิกเพื่อเลือก')
                                     ->columnSpanFull(),
                                 Hidden::make('is_cover')

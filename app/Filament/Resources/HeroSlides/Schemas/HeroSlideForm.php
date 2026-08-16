@@ -26,6 +26,9 @@ class HeroSlideForm
                             ->imageEditorAspectRatios([
                                 '16:9',
                             ])
+                            ->automaticallyResizeImagesToWidth('2560')
+                            ->automaticallyResizeImagesMode('contain')
+                            ->automaticallyUpscaleImagesWhenResizing(false)
                             ->helperText('แนะนำรูปแนวนอนกว้าง ขนาดอย่างน้อย 1920x1080 พิกเซล (สัดส่วน 16:9) เพื่อความคมชัดเต็มจอ ใช้ปุ่มแก้ไขรูปเพื่อครอปก่อนบันทึกได้เลย')
                             ->placeholder('ลากและวางไฟล์ หรือคลิกเพื่อเลือก')
                             ->columnSpanFull(),

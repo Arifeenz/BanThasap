@@ -1,6 +1,7 @@
 @extends('layouts.public')
 
 @section('title', 'ท่องเที่ยว - ตำบลท่าสาป')
+@section('description', __('site.attractions.header_subtitle') . ' ธรรมชาติ ประวัติศาสตร์ และแหล่งเรียนรู้ในตำบลท่าสาป')
 
 @section('content')
 

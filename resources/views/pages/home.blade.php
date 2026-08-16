@@ -1,6 +1,7 @@
 @extends('layouts.public')
 
 @section('title', 'หน้าแรก - ตำบลท่าสาป')
+@section('description', __('site.footer.tagline') . ' — ' . __('site.home.hero_badge') . ' ชมสินค้าชุมชน สถานที่ท่องเที่ยว และข่าวสารของตำบลท่าสาป')
 
 @section('content')
 

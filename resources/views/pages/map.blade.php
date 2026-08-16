@@ -1,6 +1,7 @@
 @extends('layouts.public')
 
 @section('title', 'แผนที่ชุมชน - ตำบลท่าสาป')
+@section('description', __('site.map.header_subtitle'))
 
 @section('content')
 

@@ -1,6 +1,7 @@
 @extends('layouts.public')
 
 @section('title', 'สินค้าชุมชน - ตำบลท่าสาป')
+@section('description', __('site.products.header_subtitle') . ' อาหาร หัตถกรรม และสินค้าสุขภาพจากชุมชนตำบลท่าสาป')
 
 @section('content')
 

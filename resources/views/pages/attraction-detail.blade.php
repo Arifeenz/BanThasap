@@ -1,6 +1,10 @@
 @extends('layouts.public')
 
 @section('title', $attraction->name . ' - ตำบลท่าสาป')
+@section('description', Str::limit(strip_tags($attraction->description ?? ''), 155) ?: __('site.attractions.header_subtitle'))
+@if($attraction->images->isNotEmpty())
+    @section('og_image', Storage::disk('public')->url(($attraction->images->firstWhere('is_cover', true) ?? $attraction->images->first())->image))
+@endif
 
 @section('content')
 

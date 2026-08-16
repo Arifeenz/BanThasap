@@ -1,6 +1,7 @@
 @extends('layouts.public')
 
 @section('title', 'ข่าวสาร - ตำบลท่าสาป')
+@section('description', __('site.posts.header_subtitle') . ' ข่าว กิจกรรม และประกาศจากตำบลท่าสาป')
 
 @section('content')
 

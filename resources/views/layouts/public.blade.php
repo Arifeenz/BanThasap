@@ -3,7 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'ตำบลท่าสาป')</title>
+    @php
+        $metaTitle = trim($__env->yieldContent('title')) ?: 'ตำบลท่าสาป';
+        $metaDescription = trim(strip_tags($__env->yieldContent('description'))) ?: (__('site.footer.tagline') . ' — ' . __('site.home.hero_badge'));
+        $metaImage = trim($__env->yieldContent('og_image')) ?: asset('images/logo.png');
+    @endphp
+    <title>{!! $metaTitle !!}</title>
+    <meta name="description" content="{!! $metaDescription !!}">
+    <link rel="canonical" href="{{ url()->current() }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="ตำบลท่าสาป">
+    <meta property="og:locale" content="{{ app()->getLocale() === 'th' ? 'th_TH' : 'ms_MY' }}">
+    <meta property="og:title" content="{!! $metaTitle !!}">
+    <meta property="og:description" content="{!! $metaDescription !!}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{!! $metaImage !!}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{!! $metaTitle !!}">
+    <meta name="twitter:description" content="{!! $metaDescription !!}">
+    <meta name="twitter:image" content="{!! $metaImage !!}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">

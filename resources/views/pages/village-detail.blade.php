@@ -1,6 +1,10 @@
 @extends('layouts.public')
 
 @section('title', $village->name . ' - ตำบลท่าสาป')
+@section('description', Str::limit(strip_tags($village->description ?? ''), 155) ?: $village->highlight ?: __('site.villages.header_subtitle'))
+@if($village->images->isNotEmpty())
+    @section('og_image', Storage::disk('public')->url(($village->images->firstWhere('is_cover', true) ?? $village->images->first())->image))
+@endif
 
 @section('content')
 

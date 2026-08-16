@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\VillageController;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,8 @@ Route::get('/lang/{locale}', function (string $locale) {
 
     return back();
 })->name('lang.switch');
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/products', [ProductController::class, 'index']);

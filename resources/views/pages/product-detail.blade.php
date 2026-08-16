@@ -1,6 +1,10 @@
 @extends('layouts.public')
 
 @section('title', $product->name . ' - ตำบลท่าสาป')
+@section('description', Str::limit(strip_tags($product->description ?? ''), 155) ?: __('site.products.header_subtitle'))
+@if($product->images->isNotEmpty())
+    @section('og_image', Storage::disk('public')->url(($product->images->firstWhere('is_cover', true) ?? $product->images->first())->image))
+@endif
 
 @section('content')
 

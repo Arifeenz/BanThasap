@@ -1,6 +1,10 @@
 @extends('layouts.public')
 
 @section('title', $post->title . ' - ตำบลท่าสาป')
+@section('description', Str::limit(strip_tags($post->content ?? ''), 155) ?: __('site.posts.header_subtitle'))
+@if($post->images->isNotEmpty())
+    @section('og_image', Storage::disk('public')->url(($post->images->firstWhere('is_cover', true) ?? $post->images->first())->image))
+@endif
 
 @section('content')
 

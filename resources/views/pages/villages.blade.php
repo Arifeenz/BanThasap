@@ -1,6 +1,7 @@
 @extends('layouts.public')
 
 @section('title', '6 หมู่บ้าน - ตำบลท่าสาป')
+@section('description', __('site.villages.header_subtitle') . ' รู้จัก 6 หมู่บ้านในตำบลท่าสาป อ.เมือง จ.ยะลา')
 
 @section('content')
 
